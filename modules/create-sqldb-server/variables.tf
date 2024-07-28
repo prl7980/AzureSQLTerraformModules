@@ -1,3 +1,5 @@
+# SQL Logical Server name and location
+
 variable "server_name" {
   type        = string
   description = "Name of the logical SQL server."
@@ -13,11 +15,21 @@ variable "rg_name" {
   description = "Name of Resource Group."
 }
 
+# Server login details
+
 variable "admin_login" {
   type        = string
   description = "Admin SQL login on logical sql server."
   default     = "DBAdmin"
 }
+
+variable "ad_admin_login" {
+  type        = string
+  description = "Admin AD login on logical sql server."
+  default     = "DBAdmins"
+}
+
+# Key vault settings
 
 variable "kv_name" {
   type        = string
@@ -31,18 +43,7 @@ variable "kv_rg" {
   default     = "SQLDB"
 }
 
-
-variable "public" {
-  type        = string
-  description = "Allow public access."
-  default     = "true"
-}
-
-variable "outbound" {
-  type        = string
-  description = "Allow outbound access."
-  default     = "false"
-}
+# Server Settings
 
 variable "server_version" {
   type        = string
@@ -56,22 +57,6 @@ variable "min_tls_version" {
   default     = "1.2"
 }
 
-variable "firewall_rules" {
-  description = "List of firewall rules to add to the SQL logical server."
-  type = list(object({
-    name             = string
-    start_ip_address = string
-    end_ip_address   = string
-  }))
-  default = []
-  #default = [
-  #{
-  #  name              = "1"
-  #  start_ip_address  = "174.4.29.173"
-  #  end_ip_address    = "174.4.29.173"
-  #}]
-}
-
 variable "tags" {
   description = "The tags for the SQL Logical server."
   type        = map(any)
@@ -80,42 +65,33 @@ variable "tags" {
   }
 }
 
-variable "create_db" {
-  type = bool
-  description = "Option to create a blank database."
-  default = false  
-}
+# Network settings
 
-variable "database_name" {
+# Public settings and firewalls
+
+variable "public" {
   type        = string
-  description = "Name of database"
-  default     = "SQLDB"
+  description = "Allow public access."
+  default     = "false"
 }
 
-variable "sku" {
+variable "firewall_rules" {
+  description = "List of firewall rules to add to the SQL logical server."
+  type = list(object({
+    name             = string
+    start_ip_address = string
+    end_ip_address   = string
+  }))
+  default = []
+}
+
+variable "outbound" {
   type        = string
-  description = "Sku of database insance"
-  default     = "GP_S_Gen5_1"
+  description = "Allow outbound access."
+  default     = "false"
 }
 
-variable "serverless_pause" {
-  type        = number
-  description = "Pause before serverless shutdown in minutes"
-  default     = 60
-}
-
-variable "serverless_min_cpu" {
-  type        = number
-  description = "Minimum CPU capacity"
-  default     = 0.5
-}
-
-variable "db_tags" {
-  description = "The tags for the SQL Logical server."
-  type        = map(any)
-  default = {
-  }
-}
+# Private endpoint 
 
 variable "create_pri_endpoint" {
   type = bool

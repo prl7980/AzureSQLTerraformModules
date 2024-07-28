@@ -1,4 +1,4 @@
-#data "azurerm_client_config" "current" {}
+# *** logic for sql and ad password, uses keyvault ***
 
 locals {
   sql_admin_password = random_password.admin_password.result
@@ -10,11 +10,11 @@ data "azurerm_key_vault" "kv" {
 }
 
 data "azuread_group" "entra_group" {
-  display_name     = "DBAdmins"
+  display_name     = var.ad_admin_login
 }
 
 resource "random_password" "admin_password" {
-  special          = false
+  special          = false # set this to false as some command linetools don't like the special characters, your choice to add
   override_special = "#$%-_+{}:"
   upper            = true
   lower            = true
@@ -23,13 +23,15 @@ resource "random_password" "admin_password" {
 }
 
 resource "azurerm_key_vault_secret" "add_secret" {
-  name         = "sqldb-${var.server_name}"
+  name         = "sqldb-${var.server_name}" # create your own format for secret name
   value        = local.sql_admin_password
   key_vault_id = data.azurerm_key_vault.kv.id
   lifecycle {
     ignore_changes = [value]
   }
 }
+
+# *** Build logical server ***
 
 resource "azurerm_mssql_server" "server" {
   name                                 = var.server_name
@@ -50,12 +52,15 @@ resource "azurerm_mssql_server" "server" {
   }
 }
 
+# *** Set defender config ***
+
 resource "azurerm_mssql_server_security_alert_policy" "defender" {
   resource_group_name        = var.rg_name
   server_name                = azurerm_mssql_server.server.name 
   state                      = "Enabled"
 }
 
+# This is added as I create an express version of defender, and the offical defender module does not account for express
 resource "azapi_update_resource" "defender" {
   type = "Microsoft.Sql/servers/sqlVulnerabilityAssessments@2022-05-01-preview"
   name = "default"
@@ -67,6 +72,8 @@ resource "azapi_update_resource" "defender" {
   })
 }
 
+# *** Add firewall rule, assumes public is set to true ****
+
 resource "azurerm_mssql_firewall_rule" "firewall" {
   for_each         = { for idx, rule in var.firewall_rules : idx => rule if var.public }
   name             = "fw-rule-${each.value.name}"
@@ -75,15 +82,7 @@ resource "azurerm_mssql_firewall_rule" "firewall" {
   end_ip_address   = each.value.end_ip_address
 }
 
-resource "azurerm_mssql_database" "db" {
-  count                       = var.create_db ? 1 : 0
-  name                        = var.database_name
-  server_id                   = azurerm_mssql_server.server.id
-  sku_name                    = var.sku
-  min_capacity                = var.serverless_min_cpu
-  auto_pause_delay_in_minutes = var.serverless_pause
-  tags                        = var.db_tags
-}
+# *** Private endpoint settings ***
 
 data "azurerm_virtual_network" "vm_network" {
   count               = var.create_pri_endpoint ? 1 : 0
@@ -107,7 +106,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   tags                = var.tags
 
   private_service_connection {
-    name                           = "${var.server_name}-privateserviceconnection"
+    name                           = "${var.server_name}-privateserviceconnection" # Set a name to your standards
     private_connection_resource_id = azurerm_mssql_server.server.id
     subresource_names              = ["sqlServer"]
     is_manual_connection           = false
@@ -119,6 +118,8 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   }
 
 }
+
+# Dns Zone details
 
 data "azurerm_private_dns_zone" "dns_zone" {
   name                = "privatelink.database.windows.net"
