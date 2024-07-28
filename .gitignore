@@ -1,0 +1,14 @@
+examples/BuildSQLServer1/.terraform/modules/modules.json
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/azure/azapi/1.14.0/darwin_arm64/terraform-provider-azapi_v1.14.0
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/azuread/2.53.1/darwin_arm64/LICENSE.txt
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/azuread/2.53.1/darwin_arm64/terraform-provider-azuread_v2.53.1_x5
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/azurerm/3.113.0/darwin_arm64/LICENSE.txt
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/azurerm/3.113.0/darwin_arm64/terraform-provider-azurerm_v3.113.0_x5
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/random/3.6.2/darwin_arm64/LICENSE.txt
+examples/BuildSQLServer1/.terraform/providers/registry.terraform.io/hashicorp/random/3.6.2/darwin_arm64/terraform-provider-random_v3.6.2_x5
+examples/.DS_Store
+.DS_Store
+examples/BuildSQLServer1/.terraform.lock.hcl
+examples/BuildSQLServer1/terraform.tfstate
+examples/BuildSQLServer1/.terraform.tfstate.lock.info
+examples/BuildSQLServer1/terraform.tfstate.backup
