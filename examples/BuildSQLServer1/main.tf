@@ -1,5 +1,5 @@
 module "BuildSQLDBServer" {
-  source      = "../../AZModules/create-sqldb-server"
+  source      = "../../Modules/create-sqldb-server"
   server_name = "prlsqldb3"
   #public = false
   tags = {
@@ -20,14 +20,14 @@ module "BuildSQLDBServer" {
 }
 
 #module "BuildSQLDBServer2" {
-#  source      = "../../AZModules/create-sqldb-server"
+#  source      = "../../Aodules/create-sqldb-server"
 #  server_name = "prlsqldb2"
 #  #public = false
 #}
 
 
 module "BuildBolloxDB" {
-  source        = "../../AZModules/create-sqldb-database"
+  source        = "../../Modules/create-sqldb-database"
   server_id     = module.BuildSQLDBServer.sql_server_id
   database_name = "Movies"
   #sku           = "GP_S_Gen5_2"
@@ -37,7 +37,7 @@ module "BuildBolloxDB" {
 }
 
 #module "BuildMoviesDB" {
-#  source                 = "../../AZModules/create-sqldb-database-import"
+#  source                 = "../../Modules/create-sqldb-database-import"
 #  server_id              = module.BuildSQLDBServer.sql_server_id
 #  database_name          = "Movies"
 #  import_resouce_group   = "Storage"
