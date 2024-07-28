@@ -1,4 +1,4 @@
-data "azurerm_client_config" "current" {}
+#data "azurerm_client_config" "current" {}
 
 locals {
   sql_admin_password = random_password.admin_password.result
@@ -8,10 +8,6 @@ data "azurerm_key_vault" "kv" {
   name                = var.kv_name
   resource_group_name = var.kv_rg
 }
-
-#data "azuread_user" "entra_user" {
-#  user_principal_name = "dba@patricksmanor.ca"
-#}
 
 data "azuread_group" "entra_group" {
   display_name     = "DBAdmins"

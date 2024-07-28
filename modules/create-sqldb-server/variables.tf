@@ -6,13 +6,11 @@ variable "server_name" {
 variable "region_location" {
   type        = string
   description = "Region of Logical server."
-  default     = "canadacentral"
 }
 
 variable "rg_name" {
   type        = string
   description = "Name of Resource Group."
-  default     = "SQLDB"
 }
 
 variable "admin_login" {
