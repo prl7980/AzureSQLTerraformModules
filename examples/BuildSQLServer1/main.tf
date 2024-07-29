@@ -1,8 +1,8 @@
 module "BuildSQLDBServer1" {
-  source      = "../../modules/create-sqldb-server"
-  server_name = "testtfdb1"
+  source          = "../../modules/create-sqldb-server"
+  server_name     = "testtfdb1"
   region_location = "canadacentral"
-  rg_name = "SQLDB"
+  rg_name         = "SQLDB"
   tags = {
     environment = "dev"
   }
@@ -11,7 +11,7 @@ module "BuildSQLDBServer1" {
       name             = "azure-access"
       start_ip_address = "0.0.0.0"
       end_ip_address   = "0.0.0.0"
-  }
+    }
   ]
 }
 
@@ -24,4 +24,3 @@ module "BuildSQLDBServer1" {
 #  #serverless_pause = -1
 #  #zone_redundant = true
 #}
-
